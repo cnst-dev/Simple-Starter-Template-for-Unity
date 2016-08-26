@@ -1,10 +1,14 @@
-﻿using UnityEngine;
+﻿using ConstantineSpace.Tools;
+using UnityEngine;
 
-public class GameManager : MonoBehaviour
+namespace ConstantineSpace.SimpleUI
 {
-    // Use this for initialization
-    void Start()
+    public class GameManager : Singleton<GameManager>
     {
-        Debug.Log("Start");
+        // Use this for initialization
+        void Start()
+        {
+            Debug.Log("Start");
+        }
     }
 }

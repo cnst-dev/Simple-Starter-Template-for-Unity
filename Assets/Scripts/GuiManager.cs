@@ -6,29 +6,29 @@ namespace ConstantineSpace.SimpleUI
     public class GuiManager : Singleton<GuiManager>
     {
         [Header("Screens")]
-        [SerializeField] private GameObject StartScreen;
-        [SerializeField] private GameObject GameScreen;
-        [SerializeField] private GameObject PauseScreen;
-        [SerializeField] private GameObject EndScreen;
+        [SerializeField] private GameObject _startScreen;
+        [SerializeField] private GameObject _gameScreen;
+        [SerializeField] private GameObject _pauseScreen;
+        [SerializeField] private GameObject _endScreen;
 
         public virtual void SetStartScreen(bool newState)
         {
-            StartScreen.SetActive(newState);
+            _startScreen.SetActive(newState);
         }
 
         public virtual void SetPauseScreen(bool newState)
         {
-            PauseScreen.SetActive(newState);
+            _pauseScreen.SetActive(newState);
         }
 
         public virtual void SetGameScreen(bool newState)
         {
-            GameScreen.SetActive(newState);
+            _gameScreen.SetActive(newState);
         }
 
         public virtual void SetEndScreen(bool newState)
         {
-            EndScreen.SetActive(newState);
+            _endScreen.SetActive(newState);
         }
     }
 }

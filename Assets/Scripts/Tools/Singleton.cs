@@ -12,7 +12,7 @@ namespace ConstantineSpace.Tools
         /// <summary>
         /// Singelton realization
         /// </summary>
-        public static T Instance
+        protected static T Instance
         {
             get
             {

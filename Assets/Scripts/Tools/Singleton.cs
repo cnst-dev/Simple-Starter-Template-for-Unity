@@ -28,10 +28,11 @@ namespace ConstantineSpace.Tools
                 return _instance;
             }
         }
+
         /// <summary>
         /// Instance initialization. Use base.Awake() when overriding
         /// </summary>
-        protected virtual void Awake()
+        public virtual void Awake()
         {
             _instance = this as T;
         }

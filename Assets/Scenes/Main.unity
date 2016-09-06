@@ -2588,7 +2588,7 @@ Prefab:
       objectReference: {fileID: 1977550335}
     - target: {fileID: 11407864, guid: 068e4182f8058b54da4bb655a7b69e2f, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_MethodName
-      value: GoToGame
+      value: GoToStart
       objectReference: {fileID: 0}
     - target: {fileID: 11407864, guid: 068e4182f8058b54da4bb655a7b69e2f, type: 2}
       propertyPath: m_OnClick.m_PersistentCalls.m_Calls.Array.data[0].m_Mode

@@ -1,5 +1,4 @@
 ﻿using ConstantineSpace.Tools;
-using UnityEngine;
 
 namespace ConstantineSpace.SimpleUI
 {
@@ -10,7 +9,7 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         private void Start()
         {
-           ScreenManager.Instance.GoToStart(null);
+            ScreenManager.Instance.GoToStart(null);
         }
     }
 }

@@ -5,23 +5,17 @@ namespace ConstantineSpace.SimpleUI
 {
     public class ScreenManager : Singleton<ScreenManager>
     {
-        [Header("Screens")]
-        [SerializeField]
-        private GameObject _startScreen;
-        [SerializeField]
-        private GameObject _gameScreen;
-        [SerializeField]
-        private GameObject _pauseScreen;
-        [SerializeField]
-        private GameObject _gameOverScreen;
-        [SerializeField]
-        private GameObject _winLevelScreen;
+        [Header("Screens")] [SerializeField] private GameObject _startScreen;
+        [SerializeField] private GameObject _gameScreen;
+        [SerializeField] private GameObject _pauseScreen;
+        [SerializeField] private GameObject _gameOverScreen;
+        [SerializeField] private GameObject _winLevelScreen;
 
 
         /// <summary>
-		/// Sets the Game screen.
-		/// </summary>
-		/// <param name="currentScreen"> The current screen game object that will be inactive.</param>
+        /// Sets the Game screen.
+        /// </summary>
+        /// <param name="currentScreen"> The current screen game object that will be inactive.</param>
         public virtual void GoToGame(GameObject currentScreen)
         {
             GuiManager.Instance.SetScreenActive(currentScreen, _gameScreen);

@@ -7,12 +7,11 @@ namespace ConstantineSpace.SimpleUI
 {
     public class GuiManager : Singleton<GuiManager>
     {
-
         /// <summary>
         /// Sets the screen active.
         /// </summary>
         /// <param name="newScreen"> The new screen game object that will be active.</param>
-        public virtual void SetScreenActive( GameObject newScreen)
+        public virtual void SetScreenActive(GameObject newScreen)
         {
             ScreenGoIn(newScreen, 0.3f, 0);
         }
@@ -47,11 +46,11 @@ namespace ConstantineSpace.SimpleUI
         private void ScreenGoOut(GameObject screen, float time, float delay)
         {
             screen.transform.localScale = Vector3.one;
-            StartCoroutine(ScaleAnimation(screen, 0, time, delay, () => {
+            StartCoroutine(ScaleAnimation(screen, 0, time, delay, () =>
+            {
                 screen.transform.localScale = Vector3.zero;
                 screen.SetActive(false);
             }));
-
         }
 
         /// <summary>
@@ -63,11 +62,11 @@ namespace ConstantineSpace.SimpleUI
         private void ScreenGoIn(GameObject screen, float time, float delay)
         {
             screen.transform.localScale = Vector3.zero;
-            StartCoroutine(ScaleAnimation(screen, 1, time, delay, () => {
+            StartCoroutine(ScaleAnimation(screen, 1, time, delay, () =>
+            {
                 screen.transform.localScale = Vector3.one;
                 screen.SetActive(true);
             }));
-
         }
 
         /// <summary>
@@ -85,13 +84,13 @@ namespace ConstantineSpace.SimpleUI
             yield return new WaitForSeconds(delay);
 
             var originalScale = screen.transform.localScale;
-            var targetScale = Vector3.one * scale;
+            var targetScale = Vector3.one*scale;
             var originalTime = time;
 
             while (time > 0.0f)
             {
                 time -= Time.deltaTime;
-                screen.transform.localScale = Vector3.Lerp(targetScale, originalScale, time / originalTime);
+                screen.transform.localScale = Vector3.Lerp(targetScale, originalScale, time/originalTime);
                 yield return 0;
             }
 

@@ -5,80 +5,89 @@ namespace ConstantineSpace.SimpleUI
 {
     public class ScreenManager : Singleton<ScreenManager>
     {
-        [Header("Screens")] [SerializeField] private GameObject _startScreen;
-        [SerializeField] private GameObject _gameScreen;
-        [SerializeField] private GameObject _pauseScreen;
-        [SerializeField] private GameObject _gameOverScreen;
-        [SerializeField] private GameObject _winLevelScreen;
+        [Header("Screens")]
+        [SerializeField]
+        private GameObject _homeScreen;
+        [SerializeField]
+        private GameObject _gameScreen;
+        [SerializeField]
+        private GameObject _pauseScreen;
+        [SerializeField]
+        private GameObject _gameOverScreen;
+        [SerializeField]
+        private GameObject _winLevelScreen;
 
-
-        /// <summary>
-        /// Sets the Game screen.
-        /// </summary>
-        /// <param name="currentScreen"> The current screen game object that will be inactive.</param>
-        public virtual void GoToGame(GameObject currentScreen)
-        {
-            GuiManager.Instance.SetScreenActive(currentScreen, _gameScreen);
-        }
+        // The current screen game object.
+        public GameObject _currentScreen;
 
         /// <summary>
         /// Sets the Start screen.
         /// </summary>
-        /// <param name="currentScreen"> The current screen game object that will be inactive.</param>
-        public virtual void GoToStart(GameObject currentScreen)
+        public virtual void SetHomeScreen()
         {
-            if (currentScreen != null)
+            GuiManager.Instance.SetScreenActive(_homeScreen);
+            if (_currentScreen != null)
             {
-                GuiManager.Instance.SetScreenInActive(currentScreen);
-                GuiManager.Instance.SetScreenInActive(_gameScreen);
+                HideCurrentScreen();
             }
-            GuiManager.Instance.SetScreenActive(_startScreen);
+            _currentScreen = _homeScreen;
+        }
+
+        /// <summary>
+        /// Sets the Game screen.
+        /// </summary>
+        public virtual void SetGameScreen()
+        {
+            HideCurrentScreen();
+            GuiManager.Instance.SetScreenActive(_gameScreen);
+            _currentScreen = _gameScreen;
+        }
+
+        /// <summary>
+        /// Hides the Game screen.
+        /// </summary>
+        public virtual void HideGameScreen()
+        {
+            GuiManager.Instance.SetScreenInActive(_gameScreen);
         }
 
         /// <summary>
         /// Pauses the game.
         /// </summary>
-        public virtual void Pause()
+        public virtual void SetPauseScreen()
         {
             if (!_pauseScreen.activeInHierarchy)
             {
                 GuiManager.Instance.SetScreenActive(_pauseScreen);
+                _currentScreen = _pauseScreen;
             }
         }
 
         /// <summary>
-        /// Unpauses the game.
+        /// Hide the current screen.
         /// </summary>
-        public virtual void UnPause()
+        public virtual void HideCurrentScreen()
         {
-            Debug.Log("UnPause");
-            GuiManager.Instance.SetScreenInActive(_pauseScreen);
-        }
-
-        /// <summary>
-        /// Restarts the game.
-        /// </summary>
-        /// <param name="currentScreen"> The current screen game object that will be inactive.</param>
-        public virtual void Restart(GameObject currentScreen)
-        {
-            Debug.Log("Restart");
-            GuiManager.Instance.SetScreenInActive(currentScreen);
+            GuiManager.Instance.SetScreenInActive(_currentScreen);
+            _currentScreen = _gameScreen;
         }
 
         /// <summary>
         /// Sets the Win screen.
         /// </summary>
-        public virtual void WinGame()
+        public virtual void SetWinScreen()
         {
             GuiManager.Instance.SetScreenActive(_winLevelScreen);
+            _currentScreen = _winLevelScreen;
         }
 
         /// <summary>
         /// Sets the GameOver screen.
         /// </summary>
-        public virtual void GameOver()
+        public virtual void SetGameOverScreen()
         {
             GuiManager.Instance.SetScreenActive(_gameOverScreen);
+            _currentScreen = _gameOverScreen;
         }
     }
 }

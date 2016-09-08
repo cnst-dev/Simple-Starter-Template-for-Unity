@@ -10,31 +10,18 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Sets the screen active.
         /// </summary>
-        /// <param name="newScreen"> The new screen game object that will be active.</param>
-        public virtual void SetScreenActive(GameObject newScreen)
+        /// <param name="screen">The screen game object.</param>
+        /// <param name="state">The new state of the screen. True - active, false - inactive.</param>
+        public virtual void SetScreenState(GameObject screen, bool state)
         {
-            ScreenGoIn(newScreen, 0.3f, 0);
-        }
-
-        /// <summary>
-        /// Sets the screen active.
-        /// </summary>
-        /// <param name="currentScreen"> The current screen game object that will be inactive.</param>
-        /// <param name="newScreen"> The new screen game object that will be active.</param>
-        public virtual void SetScreenActive(GameObject currentScreen, GameObject newScreen)
-        {
-            float time = 0.3f;
-            ScreenGoOut(currentScreen, time, 0);
-            ScreenGoIn(newScreen, time, time);
-        }
-
-        /// <summary>
-        /// Sets the screen active.
-        /// </summary>
-        /// <param name="currentScreen"> The current screen game object that will be inactive.</param>
-        public virtual void SetScreenInActive(GameObject currentScreen)
-        {
-            ScreenGoOut(currentScreen, 0.3f, 0);
+            if (state)
+            {
+                ScreenGoIn(screen, 0.3f, 0);
+            }
+            else
+            {
+                ScreenGoOut(screen, 0.3f, 0);
+            }
         }
 
         /// <summary>
@@ -84,13 +71,13 @@ namespace ConstantineSpace.SimpleUI
             yield return new WaitForSeconds(delay);
 
             var originalScale = screen.transform.localScale;
-            var targetScale = Vector3.one*scale;
+            var targetScale = Vector3.one * scale;
             var originalTime = time;
 
             while (time > 0.0f)
             {
                 time -= Time.deltaTime;
-                screen.transform.localScale = Vector3.Lerp(targetScale, originalScale, time/originalTime);
+                screen.transform.localScale = Vector3.Lerp(targetScale, originalScale, time / originalTime);
                 yield return 0;
             }
 

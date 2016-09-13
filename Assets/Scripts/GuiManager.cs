@@ -12,15 +12,16 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         /// <param name="screen">The screen game object.</param>
         /// <param name="state">The new state of the screen. True - active, false - inactive.</param>
-        public virtual void SetScreenState(GameObject screen, bool state)
+        /// <param name="time">The duration of the animation.</param>
+        public virtual void SetScreenState(GameObject screen, bool state, float time = 0.3f)
         {
             if (state)
             {
-                ScreenGoIn(screen, 0.3f, 0);
+                ScreenGoIn(screen, time, 0);
             }
             else
             {
-                ScreenGoOut(screen, 0.3f, 0);
+                ScreenGoOut(screen, time, 0);
             }
         }
 

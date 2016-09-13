@@ -40,7 +40,7 @@ namespace ConstantineSpace.SimpleUI
         public virtual void SetGameScreen()
         {
             HideCurrentScreen();
-            GuiManager.Instance.SetScreenState(_gameScreen, true);
+            GuiManager.Instance.SetScreenState(_gameScreen, true, 0);
             _currentScreen = _gameScreen;
         }
 
@@ -57,11 +57,9 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         public virtual void SetPauseScreen()
         {
-            if (GameManager.Instance.CurrentState == GameManager.GameState.InGame)
-            {
-                GuiManager.Instance.SetScreenState(_pauseScreen, true);
-                _currentScreen = _pauseScreen;
-            }
+            if (GameManager.Instance.CurrentState != GameManager.GameState.InGame) return;
+            GuiManager.Instance.SetScreenState(_pauseScreen, true);
+            _currentScreen = _pauseScreen;
         }
 
         /// <summary>

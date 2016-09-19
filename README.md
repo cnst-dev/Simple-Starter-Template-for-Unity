@@ -1,1 +1,1 @@
-# simple-unity-ui
+Simple Starter template for fast prototyping in Unity

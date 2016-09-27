@@ -18,7 +18,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Initialization.
         /// </summary>
-        protected virtual void Start()
+        private void Start()
         {
             ScreenManager.Instance.SetHomeScreen();
             SetGameState(GameState.Menu);
@@ -27,7 +27,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Start the level or gameplay.
         /// </summary>
-        public virtual void StartLevel()
+        public void StartLevel()
         {
             ScreenManager.Instance.SetGameScreen();
             SetGameState(GameState.InGame);
@@ -36,7 +36,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Pause the game.
         /// </summary>
-        public virtual void Pause()
+        public void Pause()
         {
             ScreenManager.Instance.SetPauseScreen();
             SetGameState(GameState.Paused);
@@ -45,7 +45,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Continue the game.
         /// </summary>
-        public virtual void UnPause()
+        public void UnPause()
         {
             ScreenManager.Instance.HideCurrentScreen();
             SetGameState(GameState.InGame);
@@ -54,7 +54,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Win the level.
         /// </summary>
-        public virtual void WinLevel()
+        public void WinLevel()
         {
             ScreenManager.Instance.SetWinScreen();
             SetGameState(GameState.Menu);
@@ -63,7 +63,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Game over.
         /// </summary>
-        public virtual void GameOver()
+        public void GameOver()
         {
             ScreenManager.Instance.SetGameOverScreen();
             SetGameState(GameState.Menu);
@@ -72,7 +72,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Restart the game.
         /// </summary>
-        public virtual void Restart()
+        public void Restart()
         {
             Debug.Log("Restart game!");
             ScreenManager.Instance.HideCurrentScreen();
@@ -82,7 +82,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Go to the Home screen.
         /// </summary>
-        public virtual void GoToHome()
+        public void GoToHome()
         {
             ScreenManager.Instance.HideGameScreen();
             ScreenManager.Instance.SetHomeScreen();
@@ -92,7 +92,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Go to the next level.
         /// </summary>
-        public virtual void GoToNextLevel()
+        public void GoToNextLevel()
         {
             Debug.Log("Next level!");
             ScreenManager.Instance.HideCurrentScreen();
@@ -103,7 +103,7 @@ namespace ConstantineSpace.SimpleUI
         /// Sets the game state.
         /// </summary>
         /// <param name="state">The new sate.</param>
-        public virtual void SetGameState(GameState state)
+        private void SetGameState(GameState state)
         {
             CurrentState = state;
         }

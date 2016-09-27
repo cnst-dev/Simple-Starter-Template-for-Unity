@@ -1,27 +1,41 @@
-﻿using System;
-using System.Collections;
-using ConstantineSpace.Tools;
+﻿using ConstantineSpace.Tools;
 using UnityEngine;
+using UnityEngine.UI;
 
 namespace ConstantineSpace.SimpleUI
 {
     public class GuiManager : Singleton<GuiManager>
     {
+        [SerializeField]
+        // The menu background image.
+        private Image _menuBackground;
+        // The menu background start color.
+        private Color _menuBackgroundColor;
+
+        /// <summary>
+        /// Initialization.
+        /// </summary>
+        public void Start()
+        {
+            // Save start background color
+            _menuBackgroundColor = _menuBackground.color;
+        }
+
         /// <summary>
         /// Sets the screen active.
         /// </summary>
         /// <param name="screen">The screen game object.</param>
         /// <param name="state">The new state of the screen. True - active, false - inactive.</param>
-        /// <param name="time">The duration of the animation.</param>
-        public virtual void SetScreenState(GameObject screen, bool state, float time = 0.3f)
+        /// <param name="duration">The duration of the animation.</param>
+        public void SetScreenState(GameObject screen, bool state, float duration = 0.3f)
         {
             if (state)
             {
-                ScreenGoIn(screen, time, 0);
+                ScreenGoIn(screen, duration, 0);
             }
             else
             {
-                ScreenGoOut(screen, time, 0);
+                ScreenGoOut(screen, duration, 0);
             }
         }
 
@@ -29,12 +43,12 @@ namespace ConstantineSpace.SimpleUI
         /// The screen scale animation from 1 to 0.
         /// </summary>
         /// <param name="screen">The screen game object for the scaling animation.</param>
-        /// <param name="time">The duration of the animation.</param>
+        /// <param name="duration">The duration of the animation.</param>
         /// <param name="delay">The delay before the animation.</param>
-        private void ScreenGoOut(GameObject screen, float time, float delay)
+        private void ScreenGoOut(GameObject screen, float duration, float delay)
         {
             screen.transform.localScale = Vector3.one;
-            StartCoroutine(ScaleAnimation(screen, 0, time, delay, () =>
+            StartCoroutine(SimpleAnimator.ScaleAnimation(screen, 0, duration, delay, () =>
             {
                 screen.transform.localScale = Vector3.zero;
                 screen.SetActive(false);
@@ -45,12 +59,12 @@ namespace ConstantineSpace.SimpleUI
         /// The screen scale animation from 0 to 1.
         /// </summary>
         /// <param name="screen">The screen game object for the scaling animation.</param>
-        /// <param name="time">The duration of the animation.</param>
+        /// <param name="duration">The duration of the animation.</param>
         /// <param name="delay">The delay before the animation.</param>
-        private void ScreenGoIn(GameObject screen, float time, float delay)
+        private void ScreenGoIn(GameObject screen, float duration, float delay)
         {
             screen.transform.localScale = Vector3.zero;
-            StartCoroutine(ScaleAnimation(screen, 1, time, delay, () =>
+            StartCoroutine(SimpleAnimator.ScaleAnimation(screen, 1, duration, delay, () =>
             {
                 screen.transform.localScale = Vector3.one;
                 screen.SetActive(true);
@@ -58,32 +72,29 @@ namespace ConstantineSpace.SimpleUI
         }
 
         /// <summary>
-        /// Do the scale animation.
+        /// The background fade animation depending on the state.
         /// </summary>
-        /// <param name="screen">The screen game object for the scaling animation.</param>
-        /// <param name="scale">Scale to.</param>
-        /// <param name="time">The duration of the animation.</param>
-        /// <param name="delay">The delay before the animation.</param>
-        /// <param name="callback">Callback.</param>
-        private IEnumerator ScaleAnimation(GameObject screen, float scale, float time, float delay, Action callback)
+        /// <param name="state">Fade in if true, fade out if false.</param>
+        /// <param name="duration">The duration of the animation.</param>
+        public void FadeBackground(bool state, float duration = 0.5f)
         {
-            screen.SetActive(true);
-
-            yield return new WaitForSeconds(delay);
-
-            var originalScale = screen.transform.localScale;
-            var targetScale = Vector3.one * scale;
-            var originalTime = time;
-
-            while (time > 0.0f)
+            if (_menuBackground == null)
             {
-                time -= Time.deltaTime;
-                screen.transform.localScale = Vector3.Lerp(targetScale, originalScale, time / originalTime);
-                yield return 0;
+                return;
             }
 
-            if (callback != null)
-                callback();
+            _menuBackground.gameObject.SetActive(true);
+
+            if (state)
+            {
+                StartCoroutine(SimpleAnimator.FadeAnimation(_menuBackground, duration, _menuBackgroundColor));
+            }
+            else
+            {
+                var newColor = _menuBackgroundColor;
+                newColor.a = 0f;
+                StartCoroutine(SimpleAnimator.FadeAnimation(_menuBackground, duration, newColor));
+            }
         }
     }
 }

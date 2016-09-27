@@ -24,12 +24,13 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Sets the Start screen.
         /// </summary>
-        public virtual void SetHomeScreen()
+        public void SetHomeScreen()
         {
             GuiManager.Instance.SetScreenState(_homeScreen, true);
             if (_currentScreen != null)
             {
                 HideCurrentScreen();
+                GuiManager.Instance.FadeBackground(true);
             }
             _currentScreen = _homeScreen;
         }
@@ -37,9 +38,10 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Sets the Game screen.
         /// </summary>
-        public virtual void SetGameScreen()
+        public void SetGameScreen()
         {
             HideCurrentScreen();
+            GuiManager.Instance.FadeBackground(false);
             GuiManager.Instance.SetScreenState(_gameScreen, true, 0);
             _currentScreen = _gameScreen;
         }
@@ -47,7 +49,7 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Hides the Game screen.
         /// </summary>
-        public virtual void HideGameScreen()
+        public void HideGameScreen()
         {
             GuiManager.Instance.SetScreenState(_gameScreen, false);
         }
@@ -55,37 +57,44 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         /// Sets the Pause screen.
         /// </summary>
-        public virtual void SetPauseScreen()
+        public void SetPauseScreen()
         {
-            if (GameManager.Instance.CurrentState != GameManager.GameState.InGame) return;
+            if (GameManager.Instance.CurrentState != GameManager.GameState.InGame)
+            {
+                return;
+            }
             GuiManager.Instance.SetScreenState(_pauseScreen, true);
+            GuiManager.Instance.FadeBackground(true);
             _currentScreen = _pauseScreen;
         }
 
         /// <summary>
         /// Hide the current screen.
         /// </summary>
-        public virtual void HideCurrentScreen()
+        public void HideCurrentScreen()
         {
             GuiManager.Instance.SetScreenState(_currentScreen, false);
+            GuiManager.Instance.FadeBackground(false);
             _currentScreen = _gameScreen;
         }
 
         /// <summary>
         /// Sets the Win screen.
         /// </summary>
-        public virtual void SetWinScreen()
+        public void SetWinScreen()
         {
             GuiManager.Instance.SetScreenState(_winLevelScreen, true);
+            GuiManager.Instance.FadeBackground(true);
             _currentScreen = _winLevelScreen;
         }
 
         /// <summary>
         /// Sets the GameOver screen.
         /// </summary>
-        public virtual void SetGameOverScreen()
+        public void SetGameOverScreen()
         {
             GuiManager.Instance.SetScreenState(_gameOverScreen, true);
+            GuiManager.Instance.FadeBackground(true);
             _currentScreen = _gameOverScreen;
         }
     }

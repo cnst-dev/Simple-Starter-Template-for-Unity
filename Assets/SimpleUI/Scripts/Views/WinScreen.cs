@@ -4,38 +4,36 @@ using UnityEngine.UI;
 
 namespace ConstantineSpace.SimpleUI
 {
-    public class HomeScreen: BaseScreen
+    public class WinScreen : BaseScreen
     {
         [Header("Buttons")]
         [SerializeField]
-        private Button _startButton;
-        [SerializeField]
-        private Button _leaderButton;
+        private Button _restartButton;
         [SerializeField]
         private Button _shareButton;
+        [SerializeField]
+        private Button _nextLevelButton;
 
-        public event Action StartButton;
-        public event Action LeaderButton;
+        public event Action RestartButton;
         public event Action ShareButton;
+        public event Action NextLevelButton;
 
         /// <summary>
         ///     Starts the screen.
         /// </summary>
         public override void StartScreen()
         {
-            _startButton.onClick.AddListener(() =>
+            _restartButton.onClick.AddListener(() =>
             {
-                if (StartButton != null) StartButton();
+                if (RestartButton != null) RestartButton();
             });
-
-            _leaderButton.onClick.AddListener(() =>
-            {
-                if (LeaderButton != null) LeaderButton();
-            });
-
             _shareButton.onClick.AddListener(() =>
             {
                 if (ShareButton != null) ShareButton();
+            });
+            _nextLevelButton.onClick.AddListener(() =>
+            {
+                if (NextLevelButton != null) NextLevelButton();
             });
 
             ScreenGoIn(0.2f, 0.0f);
@@ -46,12 +44,11 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         public override void StopScreen()
         {
-            _startButton.onClick.RemoveAllListeners();
-            _leaderButton.onClick.RemoveAllListeners();
+            _restartButton.onClick.RemoveAllListeners();
             _shareButton.onClick.RemoveAllListeners();
+            _nextLevelButton.onClick.RemoveAllListeners();
 
             ScreenGoOut(0.2f, 0.0f);
         }
-
     }
 }

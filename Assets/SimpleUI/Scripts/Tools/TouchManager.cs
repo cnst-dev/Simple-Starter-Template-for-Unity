@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using ConstantineSpace.SimpleUI;
+using UnityEngine;
 using UnityEngine.EventSystems;
 
 namespace ConstantineSpace.Tools
@@ -8,7 +9,7 @@ namespace ConstantineSpace.Tools
     /// </summary>
     public interface ITouchHandler : IEventSystemHandler
     {
-        void OnTouched(float touchTime);
+        void OnTouched();
     }
 
     /// <summary>
@@ -16,24 +17,16 @@ namespace ConstantineSpace.Tools
     /// </summary>
     public class TouchManager : MonoBehaviour
     {
-        private float _startTime;
-
         private void Update()
         {
-            if (Input.GetMouseButtonDown(0))
-            {
-                _startTime = Time.time;
-            }
-            else if (Input.GetMouseButtonUp(0))
-            {
-                var touchTime = Time.time - _startTime;
-                var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
-                var hit = Physics2D.Raycast(position, Vector2.zero);
-                if (hit.collider == null) return;
+            if (!Input.GetMouseButtonDown(0)) return;
 
-                ExecuteEvents.Execute<ITouchHandler>(hit.collider.gameObject, null,
-                    (handler, data) => handler.OnTouched(touchTime));
-            }
+            var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
+            var hit = Physics2D.Raycast(position, Vector2.zero);
+            if (hit.collider == null) return;
+
+            ExecuteEvents.Execute<ITouchHandler>(hit.collider.gameObject, null,
+                (handler, data) => handler.OnTouched());
         }
     }
 }

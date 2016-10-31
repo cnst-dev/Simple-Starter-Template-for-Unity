@@ -1,11 +1,18 @@
 ﻿using ConstantineSpace.Tools;
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 namespace ConstantineSpace.SimpleUI
 {
-    public class GameManager : Singleton<GameManager>
+    public interface IGameDataHandler<T> : IEventSystemHandler
     {
+        void OnDataReceived(T data);
+    }
+
+    public class GameManager : MonoBehaviour
+    {
+
         // All available game states.
         public enum GameState
         {
@@ -29,11 +36,14 @@ namespace ConstantineSpace.SimpleUI
         [SerializeField]
         private GameOverScreen _gameOverScreen;
 
+        public Observer<int> ScoreObserver;
+
         public StateMachine<GameState> StateMachine;
 
-        public override void OnCreated()
+        private void OnEnable()
         {
             StateMachine = new StateMachine<GameState>();
+            ScoreObserver = new Observer<int>(0);
             StateMachine.AddState(GameState.Start, () => Debug.Log("Start State ON"), () => Debug.Log("Start State OFF"));
             StateMachine.AddState(GameState.Home, _homeScreen.StartScreen, _homeScreen.StopScreen);
             StateMachine.AddState(GameState.Game, _gameScreen.StartScreen, _gameScreen.StopScreen);
@@ -46,6 +56,7 @@ namespace ConstantineSpace.SimpleUI
 
         private void Start()
         {
+            UpdateScore(0);
             _homeScreen.StartButton += StartLevel;
             _gameScreen.PauseButton += Pause;
             _gameScreen.WinButton += WinLevel;
@@ -66,7 +77,13 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         private void StartLevel()
         {
+            Debug.Log("Start game!");
             StateMachine.SetState(GameState.Game);
+            ExecuteEvents.Execute<IGameDataHandler<Observer<int>>>(_gameScreen.gameObject, null, (handler, data) =>
+            {
+                handler.OnDataReceived(ScoreObserver);
+            });
+            UpdateScore(10);
         }
 
         /// <summary>
@@ -129,7 +146,16 @@ namespace ConstantineSpace.SimpleUI
             StateMachine.SetState(GameState.Game);
         }
 
-        public override void OnDestroyed()
+        /// <summary>
+        ///     Sets the new score.
+        /// </summary>
+        /// <param name="score">An additional score.</param>
+        private void UpdateScore(int score)
+        {
+            ScoreObserver.Value += score;
+        }
+
+        public void OnDisable()
         {
             _homeScreen.StartButton -= StartLevel;
             _gameScreen.PauseButton -= Pause;

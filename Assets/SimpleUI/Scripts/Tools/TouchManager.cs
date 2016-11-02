@@ -24,7 +24,6 @@ namespace ConstantineSpace.Tools
             var position = Camera.main.ScreenToWorldPoint(Input.mousePosition);
             var hit = Physics2D.Raycast(position, Vector2.zero);
             if (hit.collider == null) return;
-
             ExecuteEvents.Execute<ITouchHandler>(hit.collider.gameObject, null,
                 (handler, data) => handler.OnTouched());
         }

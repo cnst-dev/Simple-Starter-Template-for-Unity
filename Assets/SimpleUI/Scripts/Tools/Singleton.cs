@@ -43,7 +43,7 @@ namespace ConstantineSpace.Tools
         /// <summary>
         ///     Use this method for overriding instead Awake().
         /// </summary>
-        public virtual void OnCreated()
+        protected virtual void OnCreated()
         {
 
         }
@@ -51,7 +51,7 @@ namespace ConstantineSpace.Tools
         /// <summary>
         ///     Use this method for overriding instead OnDestroy().
         /// </summary>
-        public virtual void OnDestroyed()
+        protected virtual void OnDestroyed()
         {
 
         }

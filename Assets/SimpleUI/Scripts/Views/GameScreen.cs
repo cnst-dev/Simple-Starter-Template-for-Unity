@@ -5,7 +5,7 @@ using UnityEngine.UI;
 
 namespace ConstantineSpace.SimpleUI
 {
-    public class GameScreen : BaseScreen, IGameDataHandler<Observer<int>>
+    public class GameScreen : BaseScreen
     {
         [Header("Buttons")]
         [SerializeField]
@@ -29,7 +29,9 @@ namespace ConstantineSpace.SimpleUI
         public override void StartScreen()
         {
             gameObject.SetActive(true);
-            
+
+            GameManager.Instance.ScoreObserver.OnDataChanged += () => SetScoreText(GameManager.Instance.ScoreObserver.Value);
+
             _pauseButton.onClick.AddListener(() =>
             {
                 if (PauseButton != null) PauseButton();
@@ -49,20 +51,13 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         public override void StopScreen()
         {
+            GameManager.Instance.ScoreObserver.OnDataChanged += () => SetScoreText(GameManager.Instance.ScoreObserver.Value);
+
             _pauseButton.onClick.RemoveAllListeners();
             _winButton.onClick.RemoveAllListeners();
             _loseButton.onClick.RemoveAllListeners();
-            gameObject.SetActive(false);
-        }
 
-        /// <summary>
-        ///     Receives the data from GameManager.
-        /// </summary>
-        /// <param name="data"></param>
-        public void OnDataReceived(Observer<int> data)
-        {
-            data.OnDataChanged += () => SetScoreText(data.Value);
-            data.OnDataChanged -= () => SetScoreText(data.Value);
+            gameObject.SetActive(false);
         }
 
         /// <summary>

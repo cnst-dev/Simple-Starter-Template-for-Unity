@@ -1,18 +1,12 @@
-﻿using ConstantineSpace.Tools;
+﻿using System.Collections;
+using ConstantineSpace.Tools;
 using UnityEngine;
-using UnityEngine.EventSystems;
 using UnityEngine.SceneManagement;
 
 namespace ConstantineSpace.SimpleUI
 {
-    public interface IGameDataHandler<T> : IEventSystemHandler
+    public class GameManager : Singleton<GameManager>
     {
-        void OnDataReceived(T data);
-    }
-
-    public class GameManager : MonoBehaviour
-    {
-
         // All available game states.
         public enum GameState
         {
@@ -40,14 +34,15 @@ namespace ConstantineSpace.SimpleUI
 
         public StateMachine<GameState> StateMachine;
 
-        private void OnEnable()
+        protected override void OnCreated()
         {
             StateMachine = new StateMachine<GameState>();
             ScoreObserver = new Observer<int>(0);
+
             StateMachine.AddState(GameState.Start, () => Debug.Log("Start State ON"), () => Debug.Log("Start State OFF"));
             StateMachine.AddState(GameState.Home, _homeScreen.StartScreen, _homeScreen.StopScreen);
             StateMachine.AddState(GameState.Game, _gameScreen.StartScreen, _gameScreen.StopScreen);
-            StateMachine.AddState(GameState.Pause, _pauseScreen.StartScreen, _pauseScreen.StopScreen);
+            StateMachine.AddState(GameState.Pause, () => SetPause(true), () => SetPause(false));
             StateMachine.AddState(GameState.Win, _winScreen.StartScreen, _winScreen.StopScreen);
             StateMachine.AddState(GameState.GameOver, _gameOverScreen.StartScreen, _gameOverScreen.StopScreen);
 
@@ -79,11 +74,6 @@ namespace ConstantineSpace.SimpleUI
         {
             Debug.Log("Start game!");
             StateMachine.SetState(GameState.Game);
-            ExecuteEvents.Execute<IGameDataHandler<Observer<int>>>(_gameScreen.gameObject, null, (handler, data) =>
-            {
-                handler.OnDataReceived(ScoreObserver);
-            });
-            UpdateScore(10);
         }
 
         /// <summary>
@@ -93,6 +83,24 @@ namespace ConstantineSpace.SimpleUI
         {
             Debug.Log("Pause game!");
             StateMachine.SetState(GameState.Pause);
+        }
+
+        /// <summary>
+        ///     Sets the gameplay pause.
+        /// </summary>
+        /// <param name="state">The new state.</param>
+        private void SetPause(bool state)
+        {
+            if (state)
+            {
+                _pauseScreen.StartScreen();
+                StartCoroutine(PauseGame(true, _pauseScreen.AnimationDuration));
+            }
+            else
+            {
+                _pauseScreen.StopScreen();
+                StartCoroutine(PauseGame(false, 0.0f));
+            }
         }
 
         /// <summary>
@@ -134,6 +142,7 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         private void GoToHome()
         {
+            Time.timeScale = 1.0f;
             SceneManager.LoadScene("Main");
         }
 
@@ -150,12 +159,12 @@ namespace ConstantineSpace.SimpleUI
         ///     Sets the new score.
         /// </summary>
         /// <param name="score">An additional score.</param>
-        private void UpdateScore(int score)
+        public void UpdateScore(int score)
         {
             ScoreObserver.Value += score;
         }
 
-        public void OnDisable()
+        protected override void OnDestroyed()
         {
             _homeScreen.StartButton -= StartLevel;
             _gameScreen.PauseButton -= Pause;
@@ -168,6 +177,18 @@ namespace ConstantineSpace.SimpleUI
             _winScreen.NextLevelButton -= GoToNextLevel;
             _gameOverScreen.HomeButton -= GoToHome;
             _gameOverScreen.RestartButton -= Restart;
+        }
+
+        /// <summary>
+        ///     Pauses gameplay after the delay.
+        /// </summary>
+        /// <param name="state">Turn on/off time pause.</param>
+        /// <param name="delay">The delay time.</param>
+        /// <returns></returns>
+        private IEnumerator PauseGame(bool state, float delay)
+        {
+            yield return new WaitForSeconds(delay);
+            Time.timeScale = state ? 0.0f : 1.0f;
         }
     }
 }

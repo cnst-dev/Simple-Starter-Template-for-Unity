@@ -14,6 +14,9 @@ namespace ConstantineSpace.SimpleUI
         [SerializeField]
         private Button _continueButton;
 
+        // An animation duration.
+        public float AnimationDuration = 0.2f;
+
         public event Action HomeButton;
         public event Action RestartButton;
         public event Action ContinueButton;
@@ -36,7 +39,7 @@ namespace ConstantineSpace.SimpleUI
                 if (ContinueButton != null) ContinueButton();
             });
 
-            ScreenGoIn(0.2f, 0.0f);
+            ScreenGoIn(AnimationDuration, 0.0f);
         }
 
         /// <summary>
@@ -47,7 +50,7 @@ namespace ConstantineSpace.SimpleUI
             _homeButton.onClick.RemoveAllListeners();
             _restartButton.onClick.RemoveAllListeners();
             _continueButton.onClick.RemoveAllListeners();
-            ScreenGoOut(0.2f, 0.0f);
+            ScreenGoOut(AnimationDuration, 0.0f);
         }
     }
 }

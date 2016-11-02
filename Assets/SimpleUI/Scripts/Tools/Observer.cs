@@ -23,13 +23,26 @@ namespace ConstantineSpace.Tools
             {
                 if (_currentValue.Equals(value)) return;
                 _currentValue = value;
-                if (OnDataChanged != null) OnDataChanged();
+
+                var args = new ChangedValueArgs<T>(_currentValue);
+
+                if (OnValueChanged != null) OnValueChanged(this, args);
             }
         }
 
         /// <summary>
         ///     Uses for subscriptions.
         /// </summary>
-        public event Action OnDataChanged;
+        public event EventHandler<ChangedValueArgs<T>> OnValueChanged;
+    }
+
+    public class ChangedValueArgs<T> : EventArgs
+    {
+        public T Value { get; private set; }
+
+        public ChangedValueArgs(T value)
+        {
+            Value = value;
+        }
     }
 }

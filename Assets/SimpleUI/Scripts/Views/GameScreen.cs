@@ -30,7 +30,7 @@ namespace ConstantineSpace.SimpleUI
         {
             gameObject.SetActive(true);
 
-            GameManager.Instance.ScoreObserver.OnDataChanged += () => SetScoreText(GameManager.Instance.ScoreObserver.Value);
+            GameManager.Instance.ScoreObserver.OnValueChanged += SetScoreText;
 
             _pauseButton.onClick.AddListener(() =>
             {
@@ -51,7 +51,7 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         public override void StopScreen()
         {
-            GameManager.Instance.ScoreObserver.OnDataChanged += () => SetScoreText(GameManager.Instance.ScoreObserver.Value);
+            GameManager.Instance.ScoreObserver.OnValueChanged -= SetScoreText;
 
             _pauseButton.onClick.RemoveAllListeners();
             _winButton.onClick.RemoveAllListeners();
@@ -63,10 +63,9 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         ///     Sets the new score text.
         /// </summary>
-        /// <param name="score">The new score.</param>
-        private void SetScoreText(int score)
+        private void SetScoreText(object sender, ChangedValueArgs<int> args)
         {
-            _scoreText.text = score.ToString("0000");
+            _scoreText.text = args.Value.ToString("0000");
         }
     }
 }

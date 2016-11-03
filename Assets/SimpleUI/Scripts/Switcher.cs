@@ -8,12 +8,19 @@ namespace ConstantineSpace.SimpleUI
         [SerializeField]
         private int _score;
 
+        private GameData _gameData;
+
+        private void Start()
+        {
+            _gameData = FindObjectOfType<GameData>();
+        }
+
         /// <summary>
         ///     Receives touch event.
         /// </summary>
         public void OnTouched()
         {
-            GameManager.Instance.UpdateScore(_score);
+            _gameData.UpdateScore(_score);
         }
     }
 }

@@ -8,12 +8,14 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         ///     Starts the screen.
         /// </summary>
-        public abstract void StartScreen();
+        /// <param name="gameData"></param>
+        public abstract void StartScreen(GameData gameData = null);
 
         /// <summary>
         ///     Stops the screen.
         /// </summary>
-        public abstract void StopScreen();
+        /// <param name="gameData"></param>
+        public abstract void StopScreen(GameData gameData = null);
 
         /// <summary>
         ///     The screen scale animation from 1 to 0.

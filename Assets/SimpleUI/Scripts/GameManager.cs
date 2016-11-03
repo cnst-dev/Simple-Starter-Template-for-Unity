@@ -5,19 +5,44 @@ using UnityEngine.SceneManagement;
 
 namespace ConstantineSpace.SimpleUI
 {
-    public class GameManager : Singleton<GameManager>
+    // All available game states.
+    public enum GameState
     {
-        // All available game states.
-        public enum GameState
+        Start,
+        Home,
+        Game,
+        Pause,
+        Win,
+        GameOver
+    }
+
+    public class GameData : ScriptableObject
+    {
+        public readonly Observer<int> ScoreObserver = new Observer<int>(0);
+
+        public readonly StateMachine<GameState> StateMachine = new StateMachine<GameState>();
+
+        /// <summary>
+        ///     Updates score.
+        /// </summary>
+        /// <param name="score"> An additional score.</param>
+        public void UpdateScore(int score)
         {
-            Start,
-            Home,
-            Game,
-            Pause,
-            Win,
-            GameOver
+            ScoreObserver.Value += score;
         }
 
+        /// <summary>
+        ///     Returns the current score.
+        /// </summary>
+        /// <returns>The current score.</returns>
+        public int GetScore()
+        {
+            return ScoreObserver.Value;
+        }
+    }
+
+    public class GameManager : MonoBehaviour
+    {
         [Header("Screens")]
         [SerializeField]
         private HomeScreen _homeScreen;
@@ -30,28 +55,24 @@ namespace ConstantineSpace.SimpleUI
         [SerializeField]
         private GameOverScreen _gameOverScreen;
 
-        public Observer<int> ScoreObserver;
+        private GameData _gameData;
 
-        public StateMachine<GameState> StateMachine;
-
-        protected override void OnCreated()
+        private  void OnEnable()
         {
-            StateMachine = new StateMachine<GameState>();
-            ScoreObserver = new Observer<int>(0);
+            _gameData = ScriptableObject.CreateInstance<GameData>();
 
-            StateMachine.AddState(GameState.Start, () => Debug.Log("Start State ON"), () => Debug.Log("Start State OFF"));
-            StateMachine.AddState(GameState.Home, _homeScreen.StartScreen, _homeScreen.StopScreen);
-            StateMachine.AddState(GameState.Game, _gameScreen.StartScreen, _gameScreen.StopScreen);
-            StateMachine.AddState(GameState.Pause, () => SetPause(true), () => SetPause(false));
-            StateMachine.AddState(GameState.Win, _winScreen.StartScreen, _winScreen.StopScreen);
-            StateMachine.AddState(GameState.GameOver, _gameOverScreen.StartScreen, _gameOverScreen.StopScreen);
+            _gameData.StateMachine.AddState(GameState.Start, () => Debug.Log("Start State ON"), () => Debug.Log("Start State OFF"));
+            _gameData.StateMachine.AddState(GameState.Home, () => _homeScreen.StartScreen(), () => _homeScreen.StopScreen());
+            _gameData.StateMachine.AddState(GameState.Game, () => _gameScreen.StartScreen(_gameData), () => _gameScreen.StopScreen(_gameData));
+            _gameData.StateMachine.AddState(GameState.Pause, () => SetPause(true), () => SetPause(false));
+            _gameData.StateMachine.AddState(GameState.Win, () => _winScreen.StartScreen(), () => _winScreen.StopScreen());
+            _gameData.StateMachine.AddState(GameState.GameOver, () =>_gameOverScreen.StartScreen(), () => _gameOverScreen.StopScreen());
 
-            StateMachine.SetState(GameState.Start);
+            _gameData.StateMachine.SetState(GameState.Start);
         }
 
         private void Start()
         {
-            UpdateScore(0);
             _homeScreen.StartButton += StartLevel;
             _gameScreen.PauseButton += Pause;
             _gameScreen.WinButton += WinLevel;
@@ -64,7 +85,7 @@ namespace ConstantineSpace.SimpleUI
             _gameOverScreen.HomeButton += GoToHome;
             _gameOverScreen.RestartButton += Restart;
 
-            StateMachine.SetState(GameState.Home);
+            _gameData.StateMachine.SetState(GameState.Home);
         }
 
         /// <summary>
@@ -73,7 +94,7 @@ namespace ConstantineSpace.SimpleUI
         private void StartLevel()
         {
             Debug.Log("Start game!");
-            StateMachine.SetState(GameState.Game);
+            _gameData.StateMachine.SetState(GameState.Game);
         }
 
         /// <summary>
@@ -82,7 +103,7 @@ namespace ConstantineSpace.SimpleUI
         private void Pause()
         {
             Debug.Log("Pause game!");
-            StateMachine.SetState(GameState.Pause);
+            _gameData.StateMachine.SetState(GameState.Pause);
         }
 
         /// <summary>
@@ -109,7 +130,7 @@ namespace ConstantineSpace.SimpleUI
         private void UnPause()
         {
             Debug.Log("Continue game!");
-            StateMachine.SetState(GameState.Game);
+            _gameData.StateMachine.SetState(GameState.Game);
         }
 
         /// <summary>
@@ -117,7 +138,7 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         private void WinLevel()
         {
-            StateMachine.SetState(GameState.Win);
+            _gameData.StateMachine.SetState(GameState.Win);
         }
 
         /// <summary>
@@ -125,7 +146,7 @@ namespace ConstantineSpace.SimpleUI
         /// </summary>
         private void GameOver()
         {
-            StateMachine.SetState(GameState.GameOver);
+            _gameData.StateMachine.SetState(GameState.GameOver);
         }
 
         /// <summary>
@@ -134,7 +155,7 @@ namespace ConstantineSpace.SimpleUI
         private void Restart()
         {
             Debug.Log("Restart game!");
-            StateMachine.SetState(GameState.Game);
+            _gameData.StateMachine.SetState(GameState.Game);
         }
 
         /// <summary>
@@ -152,19 +173,10 @@ namespace ConstantineSpace.SimpleUI
         private void GoToNextLevel()
         {
             Debug.Log("Next level!");
-            StateMachine.SetState(GameState.Game);
+            _gameData.StateMachine.SetState(GameState.Game);
         }
 
-        /// <summary>
-        ///     Sets the new score.
-        /// </summary>
-        /// <param name="score">An additional score.</param>
-        public void UpdateScore(int score)
-        {
-            ScoreObserver.Value += score;
-        }
-
-        protected override void OnDestroyed()
+        private  void OnDisable()
         {
             _homeScreen.StartButton -= StartLevel;
             _gameScreen.PauseButton -= Pause;

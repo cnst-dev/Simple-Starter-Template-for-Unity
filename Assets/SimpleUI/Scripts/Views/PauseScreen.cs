@@ -24,7 +24,8 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         ///     Starts the screen.
         /// </summary>
-        public override void StartScreen()
+        /// <param name="gameData"></param>
+        public override void StartScreen(GameData gameData = null)
         {
             _homeButton.onClick.AddListener(() =>
             {
@@ -45,7 +46,8 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         ///     Stops the screen.
         /// </summary>
-        public override void StopScreen()
+        /// <param name="gameData"></param>
+        public override void StopScreen(GameData gameData = null)
         {
             _homeButton.onClick.RemoveAllListeners();
             _restartButton.onClick.RemoveAllListeners();

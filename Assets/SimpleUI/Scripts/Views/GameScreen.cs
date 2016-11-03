@@ -26,11 +26,12 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         ///     Starts the screen.
         /// </summary>
-        public override void StartScreen()
+        /// <param name="gameData"></param>
+        public override void StartScreen(GameData gameData)
         {
             gameObject.SetActive(true);
 
-            GameManager.Instance.ScoreObserver.OnValueChanged += SetScoreText;
+            gameData.ScoreObserver.OnValueChanged += SetScoreText;
 
             _pauseButton.onClick.AddListener(() =>
             {
@@ -49,9 +50,10 @@ namespace ConstantineSpace.SimpleUI
         /// <summary>
         ///     Stops the screen.
         /// </summary>
-        public override void StopScreen()
+        /// <param name="gameData"></param>
+        public override void StopScreen(GameData gameData)
         {
-            GameManager.Instance.ScoreObserver.OnValueChanged -= SetScoreText;
+            gameData.ScoreObserver.OnValueChanged -= SetScoreText;
 
             _pauseButton.onClick.RemoveAllListeners();
             _winButton.onClick.RemoveAllListeners();

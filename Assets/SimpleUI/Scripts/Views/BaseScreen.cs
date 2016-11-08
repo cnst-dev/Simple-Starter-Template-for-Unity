@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace ConstantineSpace.SimpleUI
 {
-    public abstract class BaseScreen : MonoBehaviour
+    public abstract class BaseScreen : MonoBehaviourCache
     {
         /// <summary>
         ///     Starts the screen.
@@ -23,10 +23,10 @@ namespace ConstantineSpace.SimpleUI
         protected void ScreenGoIn(float duration, float delay)
         {
             gameObject.SetActive(true);
-            gameObject.transform.localScale = Vector3.zero;
+            transform.localScale = Vector3.zero;
             StartCoroutine(SimpleAnimator.ScaleAnimation(gameObject, 1, duration, delay, () =>
             {
-                gameObject.transform.localScale = Vector3.one;
+                transform.localScale = Vector3.one;
             }));
         }
 
@@ -37,10 +37,10 @@ namespace ConstantineSpace.SimpleUI
         /// <param name="delay">The delay before the animation.</param>
         protected void ScreenGoOut(float duration, float delay)
         {
-            gameObject.transform.localScale = Vector3.one;
+            transform.localScale = Vector3.one;
             StartCoroutine(SimpleAnimator.ScaleAnimation(gameObject, 0, duration, delay, () =>
             {
-                gameObject.transform.localScale = Vector3.zero;
+                transform.localScale = Vector3.zero;
                 gameObject.SetActive(false);
             }));
         }

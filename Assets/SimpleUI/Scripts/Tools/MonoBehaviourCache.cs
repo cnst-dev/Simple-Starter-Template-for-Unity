@@ -9,7 +9,6 @@ namespace ConstantineSpace.SimpleUI
     {
         protected Transform _cachedTransform;
         protected GameObject _cachedGameObject;
-        protected Collider2D _cachedCollider;
 
         public new Transform transform
         {
